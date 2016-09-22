@@ -77,37 +77,19 @@ See the [How to create an RPM package wiki page](https://fedoraproject.org/wiki/
 CentOS/RHEL
 -----------
 
-For CentOS/RHEL 5+:
+For CentOS/RHEL 6/7:
 
 ```bash
-# create the makerpm account for building rpms only:
-sudo useradd makerpm
-sudo groupadd mock
-sudo usermod -a -G mock makerpm
-sudo passwd makerpm
+# initial setup
+vagrant up
+vagrant snapshot save clean
 
-# install rpm build tools:
-sudo yum install rpm-build redhat-rpm-config rpmdevtools
+# cleanup
+rm -rf build
 
-# install openresty's build requirements:
-sudo yum install openssl-devel zlib-devel pcre-devel gcc make perl \
-    perl-Data-Dumper libtool ElectricFence systemtap-sdt-devel valgrind-devel
-
-# login as makerpm:
-sudo su - makerpm
-
-mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
-
-cp /path/to/openresty-packaging/rpm/SOURCES/* ~/rpmbuild/SOURCES/
-
-cd ~/rpmbuild/SPECS
-cp /path/to/openresty-packaging/rpm/SPECS/*.spec ./
-
-for file in *.spec; do
-    spectool -g -R $file
-    rpmbuild -ba $file
-done
+# actual building
+./build.sh c6
+./build.sh c7
 ```
 
 See this [wiki page](https://wiki.centos.org/HowTos/SetupRpmBuildEnvironment) for more details.

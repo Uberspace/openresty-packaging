@@ -2,3 +2,6 @@
 *.bak
 *.swp
 *.swo
+.vagrant
+build
+ssh_config
